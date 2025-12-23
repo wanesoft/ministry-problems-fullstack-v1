@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type {
   AnalysisResponse,
   CharacterResult,
@@ -37,11 +37,12 @@ export function useMinistrySession() {
     if (step === "consilium") {
       const interval = setInterval(() => {
         setAnalysisStatusIndex((prev) => (prev + 1) % CONSILIUM_MESSAGES.length);
-      }, 4000);
+      }, 8000);
       return () => clearInterval(interval);
     }
   }, [step]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: @todo
   const generateForm = useCallback(async (sid: string) => {
     try {
       const res = await fetch("/api/session/form", {
@@ -58,7 +59,7 @@ export function useMinistrySession() {
         setStep("interview");
         startInterview(sid);
       }, 5000);
-    } catch (err) {
+    } catch (_err) {
       setError("Ошибка бюрократии. Форма утеряна.");
     }
   }, []);
@@ -74,7 +75,7 @@ export function useMinistrySession() {
       if (!res.ok) throw new Error("Failed to start interview");
       const data: InterviewResponse = await res.json();
       setCurrentQuestion(data.question);
-    } catch (err) {
+    } catch (_err) {
       setError("Интервьюер отошел на перерыв.");
     }
   }, []);
@@ -90,7 +91,7 @@ export function useMinistrySession() {
       const data: DecisionResponse = await res.json();
       setDecision(data.decision);
       setStep("verdict");
-    } catch (err) {
+    } catch (_err) {
       setError("Решение утеряно в архивах.");
     }
   }, []);
@@ -113,7 +114,7 @@ export function useMinistrySession() {
         setTimeout(() => {
           getDecision(sid);
         }, 5000);
-      } catch (err) {
+      } catch (_err) {
         setError("Консилиум не смог собраться.");
       }
     },
@@ -136,7 +137,7 @@ export function useMinistrySession() {
       setStep("bureaucracy");
       // Auto-trigger form generation
       generateForm(data.session_id);
-    } catch (err) {
+    } catch (_err) {
       setError("Министерство временно недоступно. Попробуйте позже.");
     } finally {
       setIsLoading(false);
@@ -171,7 +172,7 @@ export function useMinistrySession() {
       } else {
         setCurrentQuestion(data.question);
       }
-    } catch (err) {
+    } catch (_err) {
       setError("Связь прервалась.");
     }
   };

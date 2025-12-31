@@ -37,7 +37,7 @@ export function useMinistrySession() {
     if (step === "consilium") {
       const interval = setInterval(() => {
         setAnalysisStatusIndex((prev) => (prev + 1) % CONSILIUM_MESSAGES.length);
-      }, 8000);
+      }, 3000);
       return () => clearInterval(interval);
     }
   }, [step]);

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { API_BASE_URL } from "@/lib/config";
+import { API_BASE_URL, API_AUTH_HEADERS } from "@/lib/config";
 
 export async function POST(request: Request) {
   try {
@@ -14,6 +14,7 @@ export async function POST(request: Request) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        ...API_AUTH_HEADERS,
       },
       body: JSON.stringify(rest),
     });
